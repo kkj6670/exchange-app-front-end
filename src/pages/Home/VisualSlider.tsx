@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
 const VisualWrap = styled.ul`
@@ -7,10 +7,23 @@ const VisualWrap = styled.ul`
   text-align: center;
 `;
 
-function VisualSlider() {
+interface VisualSlider {
+  list: List[];
+};
+
+interface List {
+  src: string;
+  name: string;
+};
+
+function VisualSlider({ list }: VisualSlider) {
+
+  const imgList = useMemo( () => {
+
+  }, []);
+
   return(
     <VisualWrap>
-
     </VisualWrap>
   );
 };

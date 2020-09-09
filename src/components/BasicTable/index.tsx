@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Div, FlexContainer, Text } from 'styled/base';
 
-export interface IColumnDefs {
+export interface ColumnDefs {
   width?: string;
   id: string;
   name: string;
@@ -12,8 +12,8 @@ export interface IColumnDefs {
   onClick?: Function;
 };
 
-interface IBasicTable {
-  columnDefs: IColumnDefs[];
+interface BasicTable {
+  columnDefs: ColumnDefs[];
   rowData: object[];
   uniqueKey: string;
   rowClick?: Function;
@@ -56,7 +56,7 @@ const TBody = styled(Div)`
   }
 `;
 
-function BasicTable({ columnDefs, rowData, uniqueKey, rowClick, selectMode }: IBasicTable) {
+function BasicTable({ columnDefs, rowData, uniqueKey, rowClick, selectMode }: BasicTable) {
   
   const [seletedVal, selectVal] = useState<string>();
 
@@ -106,10 +106,6 @@ function BasicTable({ columnDefs, rowData, uniqueKey, rowClick, selectMode }: IB
       </TBody>
     </TableWrap>
   );
-};
-
-BasicTable.defaultProps = {
-  rowData: [],
 };
 
 export default BasicTable;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-interface IDiv {
+interface Div {
   width?: string;
   height?: string;
   margin?: string;
@@ -14,7 +14,7 @@ interface IDiv {
   backgroundColor?: string;
 };
 
-interface IFlexContainer extends IDiv {
+interface FlexContainer extends Div {
   flexWrap?: string;
   flexDirection?: string;
   alignItems?: string;
@@ -22,14 +22,14 @@ interface IFlexContainer extends IDiv {
   justifyContent?: string;
 };
 
-interface IFlexItems extends IDiv {
+interface FlexItems extends Div {
   flex?: string;
   flexGrow?: string;
   flexShrink?: string;
   flexBasis?: string;
 };
 
-interface IText extends IDiv {
+interface Text extends Div {
   color?: string;
   align?: string;
   size?: string;
@@ -38,7 +38,25 @@ interface IText extends IDiv {
   lineHeight?: string;
 };
 
-export const Div = styled.div<IDiv>`
+interface ColorList {
+  red01: string;
+  blue01: string;
+  yellow01: string;
+  yellow02: string;
+  yellowRgba01: string;
+  yellowRgba02: string;
+};
+
+export const ColorList: ColorList = {
+  red01: '#f75467',
+  blue01: '#4386f9',
+  yellow01: '#fec91e',
+  yellow02: '#af8702',
+  yellowRgba01: 'rgba(254,201,30,0.5)',
+  yellowRgba02: 'rgba(254,201,30,0.1)',
+};
+
+export const Div = styled.div<Div>`
   ${({width}) => width && `width: ${width};`}
   ${({height}) => height && `height: ${height};`}
   ${({margin}) => margin && `margin: ${margin};`}
@@ -52,7 +70,7 @@ export const Div = styled.div<IDiv>`
   ${({backgroundColor}) => backgroundColor && `background-color: ${backgroundColor};`}
 `;
 
-export const FlexContainer = styled(Div)<IFlexContainer>`
+export const FlexContainer = styled(Div)<FlexContainer>`
   display: flex;
   ${({flexWrap}) => flexWrap && `flex-wrap: ${flexWrap};`}
   ${({flexDirection}) => flexDirection && `flex-direction: ${flexDirection};`}
@@ -61,14 +79,14 @@ export const FlexContainer = styled(Div)<IFlexContainer>`
   ${({justifyContent}) => justifyContent && `justify-content: ${justifyContent};`}
 `;
 
-export const FlexItems = styled(Div)<IFlexItems>`
+export const FlexItems = styled(Div)<FlexItems>`
   ${({flex}) => flex && `flex: ${flex};`}
   ${({flexGrow}) => flexGrow && `flex-grow: ${flexGrow};`}
   ${({flexShrink}) => flexShrink && `flex-shrink: ${flexShrink};`}
   ${({flexBasis}) => flexBasis && `flex-basis: ${flexBasis};`}
 `;
 
-export const Text = styled(Div)<IText>`
+export const Text = styled(Div)<Text>`
   ${({color}) => color && `color: ${color};`}
   ${({align}) => align && `text-align: ${align};`}
   ${({size}) => size && `font-size: ${size};`}

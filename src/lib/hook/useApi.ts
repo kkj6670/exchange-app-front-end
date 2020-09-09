@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 
 type IUseApi = [object[], Error|undefined, Function, boolean];
 
-function useApi<T> (request: Promise<T>): IUseApi {
+function useApi<T> (request: Promise<T>): UseApi {
   const [data, setData] = useState<object[]>([]);
   const [error, setError] = useState<Error>();
   const [isLoading, setLoading] = useState(false);

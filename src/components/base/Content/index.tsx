@@ -3,21 +3,15 @@ import styled from 'styled-components';
 
 import { Div } from 'styled/base';
 
-interface IContent {
+interface Content {
   children: ReactNode;
 };
 
-const MainWrap = styled.main`
-  width: 100%;
-  padding: 100px 0;
-`;
-
-function Content({ children }: IContent) {
-  
+function Content({ children }: Content) {
   return (
-    <MainWrap>
+    <Div as='main' padding='100px 0'>
       {children}
-    </MainWrap>
+    </Div>
   );
 };
 

@@ -4,26 +4,26 @@ import config from 'config';
 axios.defaults.baseURL = config.BASE_URL;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-interface IBaseResponse {
+interface BaseResponse {
   status: number;
   code: number;
 };
 
-interface IProductListRes extends IBaseResponse {
-  data: IProductList[];
+interface ProductListRes extends BaseResponse {
+  data: ProductList[];
 };
 
-export interface IProductList {
+export interface ProductList {
   nameKr: string;
   productCode: string;
   productName: string;
   tradePrice: number;
   tradeFunds24H: string;
   growthRate: number;
-  price30D: IPrice30D[];
+  price30D: Price30D[];
 };
 
-export interface IPrice30D {
+export interface Price30D {
   high: number;
   volume: number;
   low: number;
@@ -32,6 +32,6 @@ export interface IPrice30D {
   open: number; 
 };
 
-export const getProductList = () => axios.get<IProductListRes>('productList.json')
+export const getProductList = () => axios.get<ProductListRes>('productList.json')
 .then(res => res.data)
 .catch(err => { throw err });

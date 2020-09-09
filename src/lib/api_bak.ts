@@ -11,10 +11,10 @@ interface test {
 };
 
 interface test2 extends test {
-  data: IProductList[];
+  data: ProductList[];
 };
 
-export interface IProductList {
+export interface ProductList {
   productCode?: string;
   productName?: string;
   tradePrice?: number;

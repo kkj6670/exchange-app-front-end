@@ -1,19 +1,19 @@
 import { CHANGE_THEME } from 'store/action/type/base';
 
-export interface IBaseState {
+export interface BaseState {
   theme?: string
 };
 
-interface IActionProps {
+interface ActionProps {
   type: string;
-  payload: IBaseState
+  payload: BaseState
 };
 
 const initalState = {
   theme: 'dark'
 };
 
-const base = (state: IBaseState = initalState, action: IActionProps) => {
+const base = (state: BaseState = initalState, action: ActionProps) => {
   switch(action.type){
     case CHANGE_THEME: {
       const theme = action.payload.theme;
