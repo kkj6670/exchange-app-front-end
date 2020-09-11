@@ -11,6 +11,7 @@ interface Div {
   borderBottom?: string;
   borderTop?: string;
   borderRadius?: string;
+  background?: string;
   backgroundColor?: string;
 };
 
@@ -67,6 +68,7 @@ export const Div = styled.div<Div>`
   ${({borderBottom}) => borderBottom && `border-bottom: ${borderBottom};`}
   ${({borderTop}) => borderTop && `border-top: ${borderTop};`}
   ${({borderRadius}) => borderRadius && `border-radius: ${borderRadius};`}
+  ${({background}) => background && `background: ${background};`}
   ${({backgroundColor}) => backgroundColor && `background-color: ${backgroundColor};`}
 `;
 

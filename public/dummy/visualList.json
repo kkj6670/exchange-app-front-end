@@ -1,0 +1,14 @@
+{
+  "status": 200,
+  "code": 0,
+  "data": [
+    {
+      "src": "img/visual_01.jpg",
+      "name": "visual_01"
+    },
+    {
+      "src": "img/visual_02.png",
+      "name": "visual_02"
+    }
+  ]
+}

@@ -3,21 +3,23 @@ import styled from 'styled-components';
 
 import { Div, FlexContainer, Text } from 'styled/base';
 
-export interface ColumnDefs {
+export interface ColumnDefs<T> {
   width?: string;
   id: string;
   name: string;
   align?: string;
-  parser?: Function;
+  parser?: (props: T) => {};
   onClick?: Function;
 };
 
-interface BasicTable {
-  columnDefs: ColumnDefs[];
-  rowData: object[];
+interface BasicTable<T> {
+  tableId?: string;
+  columnDefs: ColumnDefs<T>[];
+  rowData?: T[];
   uniqueKey: string;
   rowClick?: Function;
   selectMode?: boolean;
+  selectContent?: Element;
 };
 
 const TableWrap = styled(Div)`
@@ -39,6 +41,7 @@ const Row = styled(FlexContainer)`
   height: 80px;
   align-items: center;
   border-bottom: 1px solid ${props => props.theme.tableBorderColor};
+  cursor: pointer;
 `;
 
 const Col = styled(Text)`
@@ -50,13 +53,12 @@ const TBody = styled(Div)`
   background-color: ${props => props.theme.tableBodyBg};
   > ${Row.selector} {
     :hover {
-      cursor: pointer;
       background-color: ${props => props.theme.tableBorderColor };
     }
   }
 `;
 
-function BasicTable({ columnDefs, rowData, uniqueKey, rowClick, selectMode }: BasicTable) {
+function BasicTable<T>({ tableId, columnDefs, rowData, uniqueKey, rowClick, selectMode }: BasicTable<T>) {
   
   const [seletedVal, selectVal] = useState<string>();
 
@@ -66,7 +68,7 @@ function BasicTable({ columnDefs, rowData, uniqueKey, rowClick, selectMode }: Ba
       else selectVal(item[uniqueKey]);
     }
     if(rowClick) rowClick(item);
-  }, [rowClick, selectMode, seletedVal, selectVal]);
+  }, [rowClick, selectMode, seletedVal, selectVal, uniqueKey]);
 
   const THeadList = useMemo( () => {
     return columnDefs.map(item => (
@@ -81,6 +83,7 @@ function BasicTable({ columnDefs, rowData, uniqueKey, rowClick, selectMode }: Ba
   }, [columnDefs]);
 
   const TBodyList = useMemo( () => {
+    if(!rowData) return;
     return rowData.map( (rowItem: any) => (
       <Row key={`TBody-${rowItem[uniqueKey]}`} onClick={() => handleRowClick(rowItem)}>
         {columnDefs.map( ({ id, width, align, parser }) => (
@@ -94,14 +97,14 @@ function BasicTable({ columnDefs, rowData, uniqueKey, rowClick, selectMode }: Ba
         ))}
       </Row>
     ));
-  }, [columnDefs, rowData]);
+  }, [columnDefs, rowData, handleRowClick, uniqueKey]);
 
   return (
-    <TableWrap>
-      <THead>
+    <TableWrap id={tableId}>
+      <THead id={tableId+'_head'}>
         {THeadList}
       </THead>
-      <TBody>
+      <TBody id={tableId+'_body'}>
         {TBodyList}
       </TBody>
     </TableWrap>

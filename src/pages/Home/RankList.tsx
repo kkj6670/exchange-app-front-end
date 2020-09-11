@@ -10,7 +10,6 @@ import { FlexContainer, FlexItems, Text, Div, ColorList } from 'styled/base';
 const CardWrap = styled.ul`
   width: 100%;
   height: 150px;
-  margin-bottom: 20px;
   border-radius: 7px;
   display: flex;
   > li {
@@ -25,6 +24,12 @@ const CardWrap = styled.ul`
     border: 1px solid ${props => props.theme.tableBorderColor};
     border-radius: 7px;
     box-shadow: 0 0 7px ${props => props.theme.tableBorderColor};
+    cursor: pointer;
+    transition-duration: 200ms;
+    :hover {
+      transform: translateY(-7px);
+      box-shadow: 0 7px 7px ${props => props.theme.tableBodyBg};
+    }
     :last-child {
       margin-right: 0;
     }
@@ -37,7 +42,7 @@ const CardWrap = styled.ul`
       z-index: -1;
       background-color: ${props => props.theme.tableBodyBg};
       > canvas {
-        opacity: 0.5;
+        opacity: 0.4;
       }
     }
   }
@@ -71,11 +76,10 @@ const CHART_OPTIONS = {
 };
 
 interface RankList {
-  list: ProductList[];
+  list?: ProductList[];
 };
 
-function RankList({ list }: RankList) {
-
+function RankList({ list = [] }: RankList) {
   const [filterList, setFilterList] = useState<ProductList[]>([]);
 
   useEffect( () => {
@@ -83,7 +87,6 @@ function RankList({ list }: RankList) {
     const sortList = [...list];
     const listLen = list.length-1;
     sortList.sort( (a,b) => a.growthRate < b.growthRate ? 1 : -1);
-    console.log(sortList);
     setFilterList([
       sortList[0],
       sortList[1],
@@ -93,8 +96,11 @@ function RankList({ list }: RankList) {
   }, [list]);
 
   const cardList = useMemo( () => filterList.map( item => {
+    const fixedRate = item.growthRate.toFixed(2);
+
     const [rate, color] = item.growthRate > 0 
-    ? [`+${item.growthRate.toFixed(2)}`, ColorList.red01] : [`${item.growthRate.toFixed(2)}`, ColorList.blue01];
+    ? [`+${fixedRate}`, ColorList.red01] 
+    : [`${fixedRate}`, ColorList.blue01];
 
     const data = (canvas: HTMLCanvasElement) => {
       const ctx = canvas.getContext('2d');
@@ -122,23 +128,24 @@ function RankList({ list }: RankList) {
     };
 
     return (
-      <li>
+      <li key={item.productCode}>
         <Text weight='bold'>
           {item.nameKr}
-          <Text as='span' margin='0 0 0 0.5rem' size='0.85rem'>{item.productName}</Text>
+          <Text as='span'weight='normal' margin='0 0 0 0.5rem' size='0.85rem'>{item.productName}</Text>
         </Text>
         <Text size='1.5rem' color={color} weight='bold'>{comma(item.tradePrice)}원</Text>
-        <Text
-          as='span'
-          width='70px'
-          align='center'
-          color='#fff'
-          backgroundColor={color}
-          padding='0.2rem 0.5rem'
-          borderRadius='7px'
-        >
-          {rate}
-        </Text>
+        <Div>
+          <Text
+            as='span'
+            align='center'
+            color='#fff'
+            backgroundColor={color}
+            padding='0.2rem 0.5rem'
+            borderRadius='7px'
+          >
+            {rate}%
+          </Text>
+        </Div>
         <Div>
           <Line
             options={CHART_OPTIONS}
@@ -150,8 +157,8 @@ function RankList({ list }: RankList) {
   }), [filterList]);
 
   return(
-    <Div>
-      <FlexContainer margin='0 0 8px 0'>
+    <Div padding='0 0 20px 0'>
+      <FlexContainer margin='0 0 20px 0'>
         <FlexItems flex='51' padding='0 0 0 7px' as={Text} size='1.2rem' weight='bold'>Best 24H</FlexItems>
         <FlexItems flex='49' padding='0 0 0 7px' as={Text} size='1.2rem' weight='bold'>Worst 24H</FlexItems>
       </FlexContainer>
