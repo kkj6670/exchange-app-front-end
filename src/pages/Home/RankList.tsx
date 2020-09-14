@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Line } from 'react-chartjs-2';
 
-import { ProductList, Price30D } from 'lib/api';
+import { ProductList, ProductOhlc } from 'lib/api';
 import { comma } from 'lib/utils';
 
 import { FlexContainer, FlexItems, Text, Div, ColorList } from 'styled/base';
@@ -114,14 +114,14 @@ function RankList({ list = [] }: RankList) {
       gradientBg?.addColorStop(1, ColorList.yellowRgba02);
     
       return {
-        labels: item.price30D.map(({ date }: Price30D) => date),
+        labels: item.price30D.map(({ date }: ProductOhlc) => date),
         datasets: [
           {
             lineTension: 0.1,
             backgroundColor: gradientBg,
             borderColor: gradientBorder,
             pointRadius: 0,
-            data: item.price30D.map(({ close }: Price30D) => close),
+            data: item.price30D.map(({ close }: ProductOhlc) => close),
           }
         ]
       };
@@ -158,7 +158,7 @@ function RankList({ list = [] }: RankList) {
 
   return(
     <Div padding='0 0 20px 0'>
-      <FlexContainer margin='0 0 20px 0'>
+      <FlexContainer margin='0 0 15px 0'>
         <FlexItems flex='51' padding='0 0 0 7px' as={Text} size='1.2rem' weight='bold'>Best 24H</FlexItems>
         <FlexItems flex='49' padding='0 0 0 7px' as={Text} size='1.2rem' weight='bold'>Worst 24H</FlexItems>
       </FlexContainer>

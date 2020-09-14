@@ -124,7 +124,7 @@ const SubNavWrap = styled.div`
    font-size: 1rem;
    margin-left: 15px;
    :hover {
-     color: #eee;
+     color: ${props => props.theme.activeColor};
    }
   }
 `;
@@ -143,13 +143,13 @@ function Header() {
           </Div>
           <Div>
             <Link to='/'>
-              <img src='img/icon_menu_wallet.png'/>
+              <img src='img/icon_menu_wallet.png' alt='자산현황 아이콘'/>
             </Link>
             <Text align='center'>자산현황</Text>
           </Div>
           <Div>
             <Link to='/'>
-              <img src='img/icon_menu_deposit.png'/>
+              <img src='img/icon_menu_deposit.png' alt='입출금 아이콘'/>
             </Link>
             <Text align='center'>입출금</Text>
           </Div>

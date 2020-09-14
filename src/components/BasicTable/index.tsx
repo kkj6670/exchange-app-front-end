@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { Div, FlexContainer, Text } from 'styled/base';
@@ -17,9 +17,9 @@ interface BasicTable<T> {
   columnDefs: ColumnDefs<T>[];
   rowData?: T[];
   uniqueKey: string;
-  rowClick?: Function;
+  onRowClick?: Function;
   selectMode?: boolean;
-  selectContent?: Element;
+  selectContent?: ReactElement | Element;
 };
 
 const TableWrap = styled(Div)`
@@ -31,17 +31,30 @@ const TableWrap = styled(Div)`
 
 const THead = styled(FlexContainer)`
   width: 100%;
-  height: 40px;
+  height: 45px;
   align-items: center;
   justify-content: space-around;
   background-color: ${props => props.theme.tableHeaderBg};
 `;
 
-const Row = styled(FlexContainer)`
+interface Row {
+  isActive: boolean;
+};
+
+const Row = styled(FlexContainer)<Row>`
   height: 80px;
   align-items: center;
   border-bottom: 1px solid ${props => props.theme.tableBorderColor};
   cursor: pointer;
+  :hover {
+    background-color: ${props => props.theme.tableBorderColor };
+  }
+  background-color: ${props => props.isActive ? props.theme.tableBorderColor : 'transparent'};
+`;
+
+const RowContent = styled(FlexContainer)`
+  padding: 15px;
+  border-bottom: 1px solid ${props => props.theme.tableBorderColor};
 `;
 
 const Col = styled(Text)`
@@ -51,24 +64,23 @@ const Col = styled(Text)`
 const TBody = styled(Div)`
   width: 100%;
   background-color: ${props => props.theme.tableBodyBg};
-  > ${Row.selector} {
-    :hover {
-      background-color: ${props => props.theme.tableBorderColor };
-    }
-  }
 `;
 
-function BasicTable<T>({ tableId, columnDefs, rowData, uniqueKey, rowClick, selectMode }: BasicTable<T>) {
+function BasicTable<T>({ tableId, columnDefs, rowData, uniqueKey, onRowClick, selectMode, selectContent }: BasicTable<T>) {
   
   const [seletedVal, selectVal] = useState<string>();
 
-  const handleRowClick = useCallback( item => {
+  const handleRowClick = useCallback( async (item) => {
+    if(onRowClick) {
+      const errCheck = await onRowClick(item);
+      if(errCheck) return;
+    }
+
     if(selectMode) {
       if(seletedVal === item[uniqueKey]) selectVal('');
       else selectVal(item[uniqueKey]);
     }
-    if(rowClick) rowClick(item);
-  }, [rowClick, selectMode, seletedVal, selectVal, uniqueKey]);
+  }, [onRowClick, selectMode, seletedVal, selectVal, uniqueKey]);
 
   const THeadList = useMemo( () => {
     return columnDefs.map(item => (
@@ -85,19 +97,28 @@ function BasicTable<T>({ tableId, columnDefs, rowData, uniqueKey, rowClick, sele
   const TBodyList = useMemo( () => {
     if(!rowData) return;
     return rowData.map( (rowItem: any) => (
-      <Row key={`TBody-${rowItem[uniqueKey]}`} onClick={() => handleRowClick(rowItem)}>
-        {columnDefs.map( ({ id, width, align, parser }) => (
-          <Col
-            key={`TBody-Col-${id}`}
-            width={width}
-            align={align}
-          >
-            {parser ? parser(rowItem) : rowItem[id]}
-          </Col>
-        ))}
-      </Row>
+      // any를 안쓸방법
+      // parser(rowItem) 와 같이 사용할수 있는 방법
+      <Div key={`TBody-${rowItem[uniqueKey]}`}>
+        <Row 
+          isActive={seletedVal === rowItem[uniqueKey]}
+          onClick={() => handleRowClick(rowItem)}>
+          {columnDefs.map( ({ id, width, align, parser }) => (
+            <Col
+              key={`TBody-Col-${id}`}
+              width={width}
+              align={align}
+            >
+              {parser ? parser(rowItem) : rowItem[id]}
+            </Col>
+          ))}
+        </Row>
+        {(selectContent && seletedVal === rowItem[uniqueKey]) && (
+          <RowContent key={`TBody-RowContent-${rowItem[uniqueKey]}`}>{selectContent}</RowContent>
+        )}
+      </Div>
     ));
-  }, [columnDefs, rowData, handleRowClick, uniqueKey]);
+  }, [seletedVal, columnDefs, rowData, handleRowClick, uniqueKey, selectContent]);
 
   return (
     <TableWrap id={tableId}>

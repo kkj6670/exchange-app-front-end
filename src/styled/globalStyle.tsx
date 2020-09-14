@@ -32,6 +32,7 @@ const GlobalStyle = createGlobalStyle`
   }
   button {
     cursor: pointer;
+    outline: none;
   }
   .hidden{
     position:absolute;

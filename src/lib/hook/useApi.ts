@@ -15,19 +15,13 @@ function useApi<T> (request: Function): UseApi<T> {
       return { data : result.data };
     } catch (err) {
       setError(err);
-      err.alert();
       return { err };
     } finally {
       setLoading(false);
     }
   }, [request, setData, setError, setLoading]);
 
-  return [
-    data,
-    error,
-    callRequest,
-    isLoading,
-  ];
+  return [data, error, callRequest, isLoading];
 };
 
 export default useApi;

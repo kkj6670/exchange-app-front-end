@@ -21,17 +21,13 @@ export interface ProductList {
   tradePrice: number;
   tradeFunds24H: string;
   growthRate: number;
-  price30D: Price30D[];
+  price30D: ProductOhlc[];
 };
 
-export interface Price30D {
-  high: number;
-  volume: number;
-  low: number;
-  date: number;
-  close: number;
-  open: number; 
-};
+export const getProductList = () => axios
+.get<ProductListRes>('productList.json')
+.then(res => res.data)
+.catch(err => { throw err });
 
 interface VisualListRes extends BaseResponse {
   data: VisualList[];
@@ -42,11 +38,35 @@ export interface VisualList {
   name: string;
 };
 
-
-export const getProductList = () => axios.get<ProductListRes>('productList.json')
+export const getVisualList = () => axios
+.get<VisualListRes>('visualList.json')
 .then(res => res.data)
 .catch(err => { throw err });
 
-export const getVisualList = () => axios.get<VisualListRes>('visualList.json')
-.then(res => res.data)
+interface ProductTickRes extends BaseResponse {
+  data: ProductOhlc[];
+};
+
+interface ProductTickReq {
+  productCode: string;
+  dateType: string;
+};
+
+export interface ProductOhlc {
+  high: number;
+  volume: number;
+  low: number;
+  date: number;
+  close: number;
+  open: number;
+};
+
+export const getProductTick = ({productCode, dateType}: ProductTickReq) => axios
+// .get<ProductTickRes>(`tick/${productCode}_${dateType}.json`)
+.get<ProductTickRes>(`https://api.ap.exchange/api/ohlc/${productCode}/${dateType}?t=0`)
+.then(res => ({
+  status: 200,
+  code: 0,
+  data: res.data
+}))
 .catch(err => { throw err });

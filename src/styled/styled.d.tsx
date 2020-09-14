@@ -6,6 +6,7 @@ declare module 'styled-components' {
     headerBg: string;
     bgColor: string;
     color: string;
+    activeColor: string;
     logoColor: string;
     menuBgGradient: string;
     tableHeaderBg: string;

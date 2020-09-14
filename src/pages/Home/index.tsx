@@ -28,7 +28,7 @@ function Home() {
   }, [visualError]);
 
   const initData = useCallback( async () => {
-    await Promise.all([productRequest(), visualRequest()]);
+    await Promise.all([ productRequest(), visualRequest() ]);
   }, [productRequest, visualRequest]);
   
   // useEffect( () => {
@@ -57,9 +57,6 @@ function Home() {
   //     alert(error.message); 
   //   }
   // }, [setVisualList]);
-
-  
-  let a: [string, string];
   
   useEffect( () => {
     initData();

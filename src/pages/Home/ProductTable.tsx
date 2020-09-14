@@ -1,12 +1,14 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { Line } from 'react-chartjs-2';
 
 import { comma } from 'lib/utils';
-import { ProductList, Price30D } from 'lib/api';
+import { getProductTick, ProductOhlc, ProductList } from 'lib/api';
 
 import { Div, Text, FlexContainer, FlexItems, ColorList } from 'styled/base';
 import BasicTable, { ColumnDefs } from 'components/BasicTable';
+import ProductChart from './ProductChart';
+import useApi from 'lib/hook/useApi';
 
 const TopMenu = styled(FlexContainer)`
   width: 100%;
@@ -127,14 +129,14 @@ const TABLE_COLUMNDEFS: ColumnDefs<ProductList>[] = [
         gradient?.addColorStop(1, ColorList.yellow02);
       
         return {
-          labels: price30D.map(({ date }: Price30D) => date),
+          labels: price30D.map(({ date }: ProductOhlc) => date),
           datasets: [
             {
               fill: false,
               lineTension: 0.1,
               borderColor: gradient,
               pointRadius: 0,
-              data: price30D.map(({ close }: Price30D) => close),
+              data: price30D.map(({ close }: ProductOhlc) => close),
             }
           ]
         };
@@ -157,9 +159,6 @@ const handleFixedTable = (fixedScrollTop: number, headerHeight: number) => {
   const tableHeader = document.getElementById('table_head');
   const tableBody = document.getElementById('table_body');
   const scrollTop = document.scrollingElement?.scrollTop || 0;
-
-  const tableHeader2 = document.querySelector('#table_head');
-  tableHeader2?.setAttribute('top','test');
 
   if(!topMenu || !tableHeader || !tableBody) return;
 
@@ -192,10 +191,29 @@ interface ProductTable {
 
 function ProductTable({ list = [] }: ProductTable) {
   const [menu, setMenu] = useState<string>('전체');
+  const [selectedProduct, selectProduct] = useState<string>();
+  const [chartData, , requestChart] = useApi<ProductOhlc[]>(getProductTick);
   
   const handleMenuClick = useCallback( (e: React.MouseEvent) => {
     setMenu(e.currentTarget.textContent || '전체');
   }, [setMenu]);
+
+  const handleRowClick = useCallback( async (item: ProductList) => {
+    const productCode = item.productCode.replace(/[0-9]/g,''); // 데이터 임의로 넣은거 처리
+    const dateType = '1H';
+    const { err } = await requestChart({ productCode, dateType });
+    if(err) alert(err);
+    console.log(productCode);
+    selectProduct(productCode);
+    return err;
+  }, [requestChart, selectProduct]);
+
+  const handleDateClick = useCallback( async (dateType) => {
+    console.log(selectedProduct,'요오기;');
+    const { err } = await requestChart({ productCode: selectedProduct, dateType });
+    if(err) alert(err);
+    return err;
+  }, [requestChart, selectedProduct]);
 
   useEffect( () => {
     const topMenu = document.getElementById('top_menu');
@@ -206,6 +224,13 @@ function ProductTable({ list = [] }: ProductTable) {
     window.addEventListener('scroll', handleScrollEvent);
     return () => window.removeEventListener('scroll', handleScrollEvent);
   }, []);
+  
+  const selectContent = useMemo( () => 
+    <ProductChart 
+      data={chartData}
+      onDateClick={handleDateClick}
+    />
+  , [chartData, handleDateClick]);
 
   return(
     <Div>
@@ -225,6 +250,8 @@ function ProductTable({ list = [] }: ProductTable) {
         rowData={list}
         uniqueKey={UNIQUE_KEY}
         selectMode
+        selectContent={selectContent}
+        onRowClick={handleRowClick}
       />
     </Div>
   );
