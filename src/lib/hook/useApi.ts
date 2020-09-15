@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 type UseApi<T> = [T | undefined, Error | undefined, Function, boolean];
 

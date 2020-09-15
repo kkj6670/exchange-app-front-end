@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
 import VisualSlider from './VisualSlider';
 import RankList from './RankList';
@@ -10,8 +10,6 @@ import { Div } from 'styled/base';
 import useApi from 'lib/hook/useApi';
 
 function Home() {
-  // const [productList, setProductList] = useState<ProductList[]>([]);
-  // const [visualList, setVisualList] = useState<VisualList[]>([]);
   
   const [ productData, productError, productRequest ] = useApi<ProductList[]>(getProductList);
 
@@ -30,33 +28,6 @@ function Home() {
   const initData = useCallback( async () => {
     await Promise.all([ productRequest(), visualRequest() ]);
   }, [productRequest, visualRequest]);
-  
-  // useEffect( () => {
-  //   alert(error);
-  // }, [error]); 
-
-  // const requestProductList = useCallback( async () => {
-  //   try {
-  //     const result = await getProductList();
-      
-  //     if(result.status !== 200) throw result;
-
-  //     setProductList(result.data);
-  //   } catch (error) {
-  //     alert(error.message);
-  //   }
-  // }, [setProductList]);
-
-  // const requestVisualImg = useCallback( async () => {
-  //   try {
-  //     const result = await getVisualList();
-
-  //     if(result.status !== 200) throw result;
-  //     setVisualList(result.data);
-  //   } catch (error) {
-  //     alert(error.message); 
-  //   }
-  // }, [setVisualList]);
   
   useEffect( () => {
     initData();

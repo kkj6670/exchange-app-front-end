@@ -45,7 +45,7 @@ const TabsMenu = styled.button<TabsMenu>`
   }
 `;
 
-const SearchWrap = styled(FlexItems)`
+const SearchBox = styled(FlexItems)`
   flex: 20;
 `;
 
@@ -78,14 +78,24 @@ const CHART_OPTIONS = {
   },
 };
 
-const TABLE_COLUMNDEFS: ColumnDefs<ProductList>[] = [
+const TABLE_COLUMN_DEFS: ColumnDefs<ProductList>[] = [
   {
     id: 'productName',
     name: '상품명',
     width: '20%',
     align: 'left',
-    parser: ({ nameKr, productName }) => {
-      return <><Text>{nameKr}</Text><Text weight='normal'>{productName}</Text></>;
+    parser: ({ nameKr, productName, imgUrl }) => {
+      return (
+        <FlexContainer>
+          <FlexItems flex='20'>
+            <Div as='img' width='40px' src={imgUrl} />
+          </FlexItems>
+          <FlexItems flex='80'>
+            <Text>{nameKr}</Text>
+            <Text weight='normal'>{productName}</Text>
+          </FlexItems>
+        </FlexContainer>
+      );
     },
   },
   {
@@ -200,7 +210,7 @@ function ProductTable({ list = [] }: ProductTable) {
 
   const handleRowClick = useCallback( async (item: ProductList) => {
     const productCode = item.productCode.replace(/[0-9]/g,''); // 데이터 임의로 넣은거 처리
-    const dateType = '1H';
+    const dateType = '1D';
     const { err } = await requestChart({ productCode, dateType });
     if(err) alert(err);
     console.log(productCode);
@@ -208,9 +218,12 @@ function ProductTable({ list = [] }: ProductTable) {
     return err;
   }, [requestChart, selectProduct]);
 
-  const handleDateClick = useCallback( async (dateType) => {
-    console.log(selectedProduct,'요오기;');
+  const handleDateClick = useCallback( async (selectDate) => {
+    let dateType = '1D';
+    if(selectDate === '1D' || selectDate === '1W') dateType = '1H';
+
     const { err } = await requestChart({ productCode: selectedProduct, dateType });
+
     if(err) alert(err);
     return err;
   }, [requestChart, selectedProduct]);
@@ -240,13 +253,11 @@ function ProductTable({ list = [] }: ProductTable) {
           <TabsMenu isActive={menu === '즐겨찾기'} onClick={handleMenuClick}>즐겨찾기</TabsMenu>
           <TabsMenu isActive={menu === '보유'} onClick={handleMenuClick}>보유</TabsMenu>
         </TabsWrap>
-        <SearchWrap>
-          
-        </SearchWrap>
+        <SearchBox />
       </TopMenu>
       <BasicTable
         tableId='table'
-        columnDefs={TABLE_COLUMNDEFS}
+        columnDefs={TABLE_COLUMN_DEFS}
         rowData={list}
         uniqueKey={UNIQUE_KEY}
         selectMode

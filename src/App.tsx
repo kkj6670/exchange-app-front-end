@@ -18,8 +18,6 @@ const setTheme = (theme: string) => {
   return themeObj;
 };
 
-let x: string;
-
 function App() {
   const theme = useSelector( (state: RootState) => state.base.theme || '' );
 

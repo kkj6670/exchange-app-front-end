@@ -21,6 +21,8 @@ export interface ProductList {
   tradePrice: number;
   tradeFunds24H: string;
   growthRate: number;
+  imgUrl: string;
+  preferred: number;
   price30D: ProductOhlc[];
 };
 
@@ -50,6 +52,7 @@ interface ProductTickRes extends BaseResponse {
 interface ProductTickReq {
   productCode: string;
   dateType: string;
+  toDate: number;
 };
 
 export interface ProductOhlc {
@@ -61,7 +64,7 @@ export interface ProductOhlc {
   open: number;
 };
 
-export const getProductTick = ({productCode, dateType}: ProductTickReq) => axios
+export const getProductTick = ({ productCode, dateType }: ProductTickReq) => axios
 // .get<ProductTickRes>(`tick/${productCode}_${dateType}.json`)
 .get<ProductTickRes>(`https://api.ap.exchange/api/ohlc/${productCode}/${dateType}?t=0`)
 .then(res => ({
