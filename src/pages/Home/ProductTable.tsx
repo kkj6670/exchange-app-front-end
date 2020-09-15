@@ -213,7 +213,6 @@ function ProductTable({ list = [] }: ProductTable) {
     const dateType = '1D';
     const { err } = await requestChart({ productCode, dateType });
     if(err) alert(err);
-    console.log(productCode);
     selectProduct(productCode);
     return err;
   }, [requestChart, selectProduct]);

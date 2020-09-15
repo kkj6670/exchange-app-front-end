@@ -57,30 +57,24 @@ function ProductChart({ data = [], onDateClick }: ProductChart) {
     const len = data.length;
     
     switch(selectedDate){
-      case '1D': 
-          count = 24;
+      case '1D': count = 24;
         break;
-      case '1W': 
-          count = 24 * 7;
+      case '1W': count = 24 * 7;
         break;
-      case '1M': 
-          count = 30;
+      case '1M': count = 30;
         break;
-      case '3M': 
-          count = 30 * 3;
+      case '3M': count = 30 * 3;
         break;
-      case '6M': 
-          count = 30 * 6;
+      case '6M': count = 30 * 6;
         break;
-      case '1Y': 
-          count = 30 * 12;
+      case '1Y': count = 30 * 12;
         break;
-      default:
-          count = 30;
+      default: count = 30;
         break;
     }
 
     count = len-count < 0 ? 0 : len-count;
+    
     return {
       labels: data.map(({ date }: ProductOhlc) => date).slice(count, len),
       datasets: [

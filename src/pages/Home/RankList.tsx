@@ -87,6 +87,7 @@ function RankList({ list = [] }: RankList) {
     const sortList = [...list];
     const listLen = list.length-1;
     sortList.sort( (a,b) => a.growthRate < b.growthRate ? 1 : -1);
+
     setFilterList([
       sortList[0],
       sortList[1],
@@ -96,6 +97,7 @@ function RankList({ list = [] }: RankList) {
   }, [list]);
 
   const cardList = useMemo( () => filterList.map( item => {
+    if(!item) return null;
     const fixedRate = item.growthRate.toFixed(2);
 
     const [rate, color] = item.growthRate > 0 
