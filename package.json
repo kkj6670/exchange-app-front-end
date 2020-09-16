@@ -1,4 +1,5 @@
 {
+  "homepage": "https://kkj6670.github.io/exchange-app",
   "name": "exchange-app",
   "version": "0.1.0",
   "private": true,
@@ -18,6 +19,7 @@
     "chart.js": "^2.9.3",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-airbnb-typescript": "^9.0.0",
+    "gh-pages": "^3.1.0",
     "react": "^16.13.1",
     "react-chartjs-2": "^2.10.0",
     "react-dom": "^16.13.1",
@@ -33,7 +35,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
