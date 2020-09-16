@@ -24,7 +24,7 @@ function App() {
   return (
     <ThemeProvider theme={setTheme(theme)}>
       <GlobalStyle />
-      <Router>
+      <Router basename='/exchange-app'>
         <Header />
         <Content>
           <Switch>

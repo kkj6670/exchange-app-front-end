@@ -96,9 +96,9 @@ function BasicTable<T>({ tableId, columnDefs, rowData, uniqueKey, onRowClick, se
 
   const TBodyList = useMemo( () => {
     if(!rowData) return;
+    // any를 안쓸방법
+    // parser(rowItem) 와 같이 사용할수 있는 방법
     return rowData.map( (rowItem: any) => (
-      // any를 안쓸방법
-      // parser(rowItem) 와 같이 사용할수 있는 방법
       <Div key={`TBody-${rowItem[uniqueKey]}`}>
         <Row 
           isActive={seletedVal === rowItem[uniqueKey]}
