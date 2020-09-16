@@ -138,24 +138,16 @@ function Header() {
         </LogoWrap>
         <NavWrap>
           <Div>
-            <Link to='/'></Link>
-            <Text align='center'>거래소</Text>
-          </Div>
-          <Div>
-            <Link to='/'>
-              <img src='img/icon_menu_wallet.png' alt='자산현황 아이콘'/>
+            <Link to='/wallet'>
+              <img src={process.env.PUBLIC_URL+'/img/icon_menu_wallet.png'} alt='자산현황 아이콘'/>
             </Link>
             <Text align='center'>자산현황</Text>
           </Div>
           <Div>
-            <Link to='/'>
-              <img src='img/icon_menu_deposit.png' alt='입출금 아이콘'/>
+            <Link to='/dw'>
+              <img src={process.env.PUBLIC_URL+'/img/icon_menu_deposit.png'} alt='입출금 아이콘'/>
             </Link>
             <Text align='center'>입출금</Text>
-          </Div>
-          <Div>
-            <Link to='/'></Link>
-            <Text align='center'>고객센터</Text>
           </Div>
         </NavWrap>
         <SubNavWrap>

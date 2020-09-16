@@ -197,16 +197,24 @@ const handleFixedTable = (fixedScrollTop: number, headerHeight: number) => {
 
 interface ProductTable {
   list?: ProductList[];
+  productRequest?: Function;
 };
 
-function ProductTable({ list = [] }: ProductTable) {
+
+function ProductTable({ list = [], productRequest = () => {} }: ProductTable) {
   const [menu, setMenu] = useState<string>('전체');
   const [selectedProduct, selectProduct] = useState<string>();
   const [chartData, , requestChart] = useApi<ProductOhlc[]>(getProductTick);
   
-  const handleMenuClick = useCallback( (e: React.MouseEvent) => {
-    setMenu(e.currentTarget.textContent || '전체');
-  }, [setMenu]);
+  const handleMenuClick = useCallback( async (e: React.MouseEvent) => {
+    const text = e.currentTarget.textContent || '전체';
+    const type = text === '보유' ? 'My' : '';
+
+    const { err } = await productRequest(type);
+    
+    if(err) return alert(err);
+    setMenu(text);
+  }, [setMenu, productRequest]);
 
   const handleRowClick = useCallback( async (item: ProductList) => {
     const productCode = item.productCode.replace(/[0-9]/g,''); // 데이터 임의로 넣은거 처리

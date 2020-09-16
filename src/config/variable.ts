@@ -1,3 +1,3 @@
 export default {
-  BASE_URL: 'dummy/',
+  BASE_URL: '/exchange-app/dummy',
 };

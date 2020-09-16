@@ -38,7 +38,7 @@ function Home() {
       <VisualSlider list={visualData} />
       <Div width='90%' margin='0 auto'>
         <RankList list={productData} />
-        <ProductTable list={productData} />
+        <ProductTable list={productData} productRequest={productRequest}/>
       </Div>
     </>
   );

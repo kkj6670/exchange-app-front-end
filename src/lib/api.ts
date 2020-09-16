@@ -26,8 +26,8 @@ export interface ProductList {
   price30D: ProductOhlc[];
 };
 
-export const getProductList = () => axios
-.get<ProductListRes>('productList.json')
+export const getProductList = (type?: string) => axios
+.get<ProductListRes>(`/productList${type || ''}.json`)
 .then(res => res.data)
 .catch(err => { throw err });
 
@@ -41,7 +41,7 @@ export interface VisualList {
 };
 
 export const getVisualList = () => axios
-.get<VisualListRes>('visualList.json')
+.get<VisualListRes>('/visualList.json')
 .then(res => res.data)
 .catch(err => { throw err });
 
