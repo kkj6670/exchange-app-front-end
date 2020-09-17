@@ -8,7 +8,7 @@ export interface ColumnDefs<T> {
   id: string;
   name: string;
   align?: string;
-  parser?: (props: T) => {};
+  parser?: (props: T) => string | Element | ReactElement;
   onClick?: Function;
 };
 
@@ -35,6 +35,7 @@ const THead = styled(FlexContainer)`
   align-items: center;
   justify-content: space-around;
   background-color: ${props => props.theme.tableHeaderBg};
+  z-index: 1;
 `;
 
 interface Row {
@@ -102,7 +103,8 @@ function BasicTable<T>({ tableId, columnDefs, rowData, uniqueKey, onRowClick, se
       <Div key={`TBody-${rowItem[uniqueKey]}`}>
         <Row 
           isActive={seletedVal === rowItem[uniqueKey]}
-          onClick={() => handleRowClick(rowItem)}>
+          onClick={() => handleRowClick(rowItem)}
+        >
           {columnDefs.map( ({ id, width, align, parser }) => (
             <Col
               key={`TBody-Col-${id}`}

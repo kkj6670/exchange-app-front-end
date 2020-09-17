@@ -9,8 +9,8 @@
       "tradePrice": 413600,
       "tradeFunds24H": "220084590.71",
       "growthRate": 5.537126818065833,
-      "imgUrl": "img/ETH.png",
-      "preferred": 1,
+      "imgUrl": "/exchange-app/img/ETH.png",
+      "preferred": 0,
       "price30D": [
         {
           "high": 277500,
@@ -581,8 +581,8 @@
       "tradeFunds24H": "13536779.4623",
       "growthRate": 1.11218115342988,
       "productName": "USDT/KRW",
-      "imgUrl": "img/USDT.png",
-      "preferred": 1,
+      "imgUrl": "/exchange-app/img/USDT.png",
+      "preferred": 0,
       "price30D": [
         {
           "high": 1216.18,
@@ -817,7 +817,7 @@
       "tradePrice": 31053,
       "tradeFunds24H": "107944.094",
       "growthRate": -0.5081563956499223,
-      "imgUrl": "img/FIL.png",
+      "imgUrl": "/exchange-app/img/FIL.png",
       "preferred": 0,
       "price30D": [
         {
@@ -1093,8 +1093,8 @@
       "tradeFunds24H": "13163897.173",
       "growthRate": 2.6868667804781743,
       "productName": "GBDT/KRW",
-      "imgUrl": "img/GBK.png",
-      "preferred": 1,
+      "imgUrl": "/exchange-app/img/GBK.png",
+      "preferred": 0,
       "price30D": [
         {
           "high": 1194.58,
@@ -1337,7 +1337,7 @@
       "tradeFunds24H": "10440960.472",
       "growthRate": -3.0886196246139326,
       "productName": "GBK/KRW",
-      "imgUrl": "img/GBK.png",
+      "imgUrl": "/exchange-app/img/GBK.png",
       "preferred": 0,
       "price30D": [
         {
@@ -1613,8 +1613,8 @@
       "tradeFunds24H": "12795537.87",
       "growthRate": 2.4255788313120052,
       "productName": "HBC/KRW",
-      "imgUrl": "img/HBC.png",
-      "preferred": 1,
+      "imgUrl": "/exchange-app/img/HBC.png",
+      "preferred": 0,
       "price30D": [
         {
           "high": 9.63,
@@ -1905,8 +1905,8 @@
       "tradePrice": 413600,
       "tradeFunds24H": "220084590.71",
       "growthRate": 1.537126818065833,
-      "imgUrl": "img/ETH.png",
-      "preferred": 1,
+      "imgUrl": "/exchange-app/img/ETH.png",
+      "preferred": 0,
       "price30D": [
         {
           "high": 277500,
@@ -2477,7 +2477,7 @@
       "tradeFunds24H": "13536779.4623",
       "growthRate": 1.11218115342988,
       "productName": "USDT2/KRW",
-      "imgUrl": "img/USDT.png",
+      "imgUrl": "/exchange-app/img/USDT.png",
       "preferred": 0,
       "price30D": [
         {
@@ -2713,7 +2713,7 @@
       "tradePrice": 31053,
       "tradeFunds24H": "107944.094",
       "growthRate": -0.5081563956499223,
-      "imgUrl": "img/FIL.png",
+      "imgUrl": "/exchange-app/img/FIL.png",
       "preferred": 0,
       "price30D": [
         {
@@ -2989,8 +2989,8 @@
       "tradeFunds24H": "13163897.173",
       "growthRate": 1.6868667804781743,
       "productName": "GBDT2/KRW",
-      "imgUrl": "img/GBK.png",
-      "preferred": 1,
+      "imgUrl": "/exchange-app/img/GBK.png",
+      "preferred": 0,
       "price30D": [
         {
           "high": 1194.58,
@@ -3233,7 +3233,7 @@
       "tradeFunds24H": "10440960.472",
       "growthRate": -0.3886196246139326,
       "productName": "GBK2/KRW",
-      "imgUrl": "img/GBK.png",
+      "imgUrl": "/exchange-app/img/GBK.png",
       "preferred": 0,
       "price30D": [
         {
@@ -3509,8 +3509,8 @@
       "tradeFunds24H": "12795537.87",
       "growthRate": 2.4255788313120052,
       "productName": "HBC2/KRW",
-      "imgUrl": "img/HBC.png",
-      "preferred": 1,
+      "imgUrl": "/exchange-app/img/HBC.png",
+      "preferred": 0,
       "price30D": [
         {
           "high": 9.63,

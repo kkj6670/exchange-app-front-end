@@ -19,7 +19,7 @@ const GlobalStyle = createGlobalStyle`
   ol, ul {
     list-style: none;
   }
-  label, input, button, select, img {
+  label, input, button, select, img, svg {
     vertical-align: middle;
   }
   a:link, a:visited {

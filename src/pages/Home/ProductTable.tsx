@@ -1,14 +1,16 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import { Line } from 'react-chartjs-2';
 
 import { comma } from 'lib/utils';
 import { getProductTick, ProductOhlc, ProductList } from 'lib/api';
+import useApi from 'lib/hook/useApi';
 
 import { Div, Text, FlexContainer, FlexItems, ColorList } from 'styled/base';
 import BasicTable, { ColumnDefs } from 'components/BasicTable';
 import ProductChart from './ProductChart';
-import useApi from 'lib/hook/useApi';
+
+import { ReactComponent as FavoriteImg } from 'svg/icon_favorite.svg';
 
 const TopMenu = styled(FlexContainer)`
   width: 100%;
@@ -16,6 +18,7 @@ const TopMenu = styled(FlexContainer)`
   align-items: center;
   background-color: ${props => props.theme.tableHeaderBg};
   border-bottom: 1px solid ${props => props.theme.tableBorderColor};
+  z-index: 1;
 `;
 
 const TabsWrap = styled(FlexItems)`
@@ -45,8 +48,15 @@ const TabsMenu = styled.button<TabsMenu>`
   }
 `;
 
-const SearchBox = styled(FlexItems)`
+const SearchBox = styled.input`
   flex: 20;
+  height: 70%;
+  margin-right: 15px;
+  background-color: transparent;
+  border: 1px solid ${props => props.theme.tableBorderColor};
+  color: ${props => props.theme.color};
+  padding: 5px 8px;
+  border-radius: 8px;
 `;
 
 const UNIQUE_KEY = 'productCode';
@@ -84,13 +94,29 @@ const TABLE_COLUMN_DEFS: ColumnDefs<ProductList>[] = [
     name: '상품명',
     width: '20%',
     align: 'left',
-    parser: ({ nameKr, productName, imgUrl }) => {
+    parser: ({ nameKr, productName, imgUrl, preferred }) => {
       return (
-        <FlexContainer>
+        <FlexContainer alignItems='center'>
+          <FlexItems flex='10'>
+            <FavoriteImg 
+              fill={ColorList.yellow01}
+              opacity={!preferred ? '0.3' : '1'}
+              data-check={preferred}
+              width='15px'
+              height='15px'
+              onClick={e => {
+                const target = e.currentTarget;
+                const check = target.getAttribute('opacity');
+                target.setAttribute('opacity',`${check === '1' ? 0.3 : 1}`);
+                // target.dataset
+                e.stopPropagation();
+              }}
+            />
+          </FlexItems>
           <FlexItems flex='20'>
             <Div as='img' width='40px' src={imgUrl} />
           </FlexItems>
-          <FlexItems flex='80'>
+          <FlexItems flex='70'>
             <Text>{nameKr}</Text>
             <Text weight='normal'>{productName}</Text>
           </FlexItems>
@@ -200,30 +226,15 @@ interface ProductTable {
   productRequest?: Function;
 };
 
-
 function ProductTable({ list = [], productRequest = () => {} }: ProductTable) {
-  const [menu, setMenu] = useState<string>('전체');
-  const [selectedProduct, selectProduct] = useState<string>();
-  const [chartData, , requestChart] = useApi<ProductOhlc[]>(getProductTick);
+  const searchBox = useRef() as React.MutableRefObject<HTMLInputElement>;
   
-  const handleMenuClick = useCallback( async (e: React.MouseEvent) => {
-    const text = e.currentTarget.textContent || '전체';
-    const type = text === '보유' ? 'My' : '';
+  const [menu, setMenu] = useState<string>('전체');
+  const [selectedProduct, selectProduct] = useState<string>('');
+  const [filterList, setFilterList] = useState<ProductList[]>(list);
+  const [searchText, setSearchText] = useState<string>('');
 
-    const { err } = await productRequest(type);
-    
-    if(err) return alert(err);
-    setMenu(text);
-  }, [setMenu, productRequest]);
-
-  const handleRowClick = useCallback( async (item: ProductList) => {
-    const productCode = item.productCode.replace(/[0-9]/g,''); // 데이터 임의로 넣은거 처리
-    const dateType = '1D';
-    const { err } = await requestChart({ productCode, dateType });
-    if(err) alert(err);
-    selectProduct(productCode);
-    return err;
-  }, [requestChart, selectProduct]);
+  const [chartData, , requestChart] = useApi<ProductOhlc[]>(getProductTick);
 
   const handleDateClick = useCallback( async (selectDate) => {
     let dateType = '1D';
@@ -234,6 +245,41 @@ function ProductTable({ list = [], productRequest = () => {} }: ProductTable) {
     if(err) alert(err);
     return err;
   }, [requestChart, selectedProduct]);
+
+  const handleRowClick = useCallback( async (item: ProductList) => {
+    const productCode = item.productCode.replace(/[0-9]/g,''); // 데이터 임의로 넣은거 처리
+    const dateType = '1D';
+    const { err } = await requestChart({ productCode, dateType });
+    if(err) alert(err);
+    selectProduct(productCode);
+    return err;
+  }, [requestChart, selectProduct]);
+
+  useEffect( () => {
+    const lowerText = searchText.toLowerCase();
+    const favorite = menu === '즐겨찾기' ? true : false;
+
+    const nextList = list.filter( ({ nameKr, productName}) => {
+      const lowerName = productName.toLowerCase();
+      let check = true;
+
+      if(
+        nameKr.search(lowerText) === -1
+        && lowerName.search(lowerText) === -1
+      ) check = false;
+
+      if(favorite) {
+        
+      }
+
+      return check;
+    });
+    setFilterList(nextList);
+  }, [list, searchText, menu]);
+
+  useEffect( () => {
+    // setFilterList();
+  }, [searchText, setFilterList]);
 
   useEffect( () => {
     const topMenu = document.getElementById('top_menu');
@@ -256,16 +302,20 @@ function ProductTable({ list = [], productRequest = () => {} }: ProductTable) {
     <Div>
       <TopMenu id='top_menu'>
         <TabsWrap>
-          <TabsMenu isActive={menu === '전체'} onClick={handleMenuClick}>전체</TabsMenu>
-          <TabsMenu isActive={menu === '즐겨찾기'} onClick={handleMenuClick}>즐겨찾기</TabsMenu>
-          <TabsMenu isActive={menu === '보유'} onClick={handleMenuClick}>보유</TabsMenu>
+          <TabsMenu isActive={menu === '전체'} onClick={e => setMenu(e.currentTarget.innerText)}>전체</TabsMenu>
+          <TabsMenu isActive={menu === '즐겨찾기'} onClick={e => setMenu(e.currentTarget.innerText)}>즐겨찾기</TabsMenu>
         </TabsWrap>
-        <SearchBox />
+        <SearchBox
+          placeholder='상품명'
+          onChange={e => setSearchText(e.currentTarget.value)}
+          value={searchText}
+          ref={searchBox}
+        />
       </TopMenu>
       <BasicTable
         tableId='table'
         columnDefs={TABLE_COLUMN_DEFS}
-        rowData={list}
+        rowData={filterList}
         uniqueKey={UNIQUE_KEY}
         selectMode
         selectContent={selectContent}

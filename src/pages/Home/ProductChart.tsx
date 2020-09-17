@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, MouseEvent } from 'react';
 import { Line } from 'react-chartjs-2';
 import styled from 'styled-components';
 
@@ -148,10 +148,9 @@ function ProductChart({ data = [], onDateClick }: ProductChart) {
     },
   }), [selectedDate]);
   
-  const handleDateClick = useCallback( async (date: React.MouseEvent) => {
-    const text = date.currentTarget.textContent;
-    if(!text) return;
-
+  const handleDateClick = useCallback( async (date: MouseEvent<HTMLButtonElement>) => {
+    const text = date.currentTarget.innerText;
+    
     const err = await onDateClick(text);
     if(err) return;
 
