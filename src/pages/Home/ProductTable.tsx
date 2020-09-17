@@ -88,108 +88,6 @@ const CHART_OPTIONS = {
   },
 };
 
-const TABLE_COLUMN_DEFS: ColumnDefs<ProductList>[] = [
-  {
-    id: 'productName',
-    name: '상품명',
-    width: '20%',
-    align: 'left',
-    parser: ({ nameKr, productName, imgUrl, preferred }) => {
-      return (
-        <FlexContainer alignItems='center'>
-          <FlexItems flex='10'>
-            <FavoriteImg 
-              fill={ColorList.yellow01}
-              opacity={!preferred ? '0.3' : '1'}
-              data-check={preferred}
-              width='15px'
-              height='15px'
-              onClick={e => {
-                const target = e.currentTarget;
-                const check = target.getAttribute('opacity');
-                target.setAttribute('opacity',`${check === '1' ? 0.3 : 1}`);
-                // target.dataset
-                e.stopPropagation();
-              }}
-            />
-          </FlexItems>
-          <FlexItems flex='20'>
-            <Div as='img' width='40px' src={imgUrl} />
-          </FlexItems>
-          <FlexItems flex='70'>
-            <Text>{nameKr}</Text>
-            <Text weight='normal'>{productName}</Text>
-          </FlexItems>
-        </FlexContainer>
-      );
-    },
-  },
-  {
-    id: 'tradePrice',
-    name: '가격',
-    width: '20%',
-    align: 'right',
-    parser: ({ tradePrice }) => `${comma(tradePrice)}`,
-  },
-  {
-    id: 'growthRate',
-    name: '전일대비',
-    width: '20%',
-    align: 'right',
-    parser: ({ growthRate }) => {
-      const rate = +growthRate.toFixed(2);
-      const textColor = rate < 0 ? ColorList.blue01 : ColorList.red01;
-      return (
-        <Text color={textColor}>{rate < 0 ? rate : `+${rate}`}%</Text>
-      );
-    },
-  },
-  {
-    id: 'tradeFunds24H',
-    name: '거래대금',
-    width: '20%',
-    align: 'right',
-    parser: ({ tradeFunds24H }) => `${comma(tradeFunds24H.split('.')[0])}원`,
-  },
-  {
-    id: 'priceGraph',
-    name: '30일 동향',
-    width: '20%',
-    align: 'right',
-    parser: ({ price30D }: ProductList) => {
-      const data = (canvas: HTMLCanvasElement) => {
-        const ctx = canvas.getContext('2d');
-        const gradient = ctx?.createLinearGradient(0,0,canvas.width-100,0);
-        
-        gradient?.addColorStop(0, ColorList.yellow01);
-        gradient?.addColorStop(1, ColorList.yellow02);
-      
-        return {
-          labels: price30D.map(({ date }: ProductOhlc) => date),
-          datasets: [
-            {
-              fill: false,
-              lineTension: 0.1,
-              borderColor: gradient,
-              pointRadius: 0,
-              data: price30D.map(({ close }: ProductOhlc) => close),
-            }
-          ]
-        };
-      };
-
-      return (
-        <Div height='70px'>
-          <Line
-            data={data}
-            options={CHART_OPTIONS}
-          />
-        </Div>
-      );
-    }
-  }
-];
-
 const handleFixedTable = (fixedScrollTop: number, headerHeight: number) => {
   const topMenu = document.getElementById('top_menu');
   const tableHeader = document.getElementById('table_head');
@@ -231,10 +129,19 @@ function ProductTable({ list = [], productRequest = () => {} }: ProductTable) {
   
   const [menu, setMenu] = useState<string>('전체');
   const [selectedProduct, selectProduct] = useState<string>('');
-  const [filterList, setFilterList] = useState<ProductList[]>(list);
+
+  // 즐겨찾기 저장용
+  // 실제 데이터 연동시 api호출해 저장후 새로 불러오는 방식으로 할지?
+  // 지금 방식보다 나은 방식이 있을지?
+  const [tempList, setTempList] = useState<ProductList[]>([]);
+  const [filterList, setFilterList] = useState<ProductList[]>([]);
   const [searchText, setSearchText] = useState<string>('');
 
   const [chartData, , requestChart] = useApi<ProductOhlc[]>(getProductTick);
+
+  useEffect( () => {
+    setTempList(list);
+  }, [list]);
 
   const handleDateClick = useCallback( async (selectDate) => {
     let dateType = '1D';
@@ -256,10 +163,10 @@ function ProductTable({ list = [], productRequest = () => {} }: ProductTable) {
   }, [requestChart, selectProduct]);
 
   useEffect( () => {
+    if(!tempList) return;
     const lowerText = searchText.toLowerCase();
     const favorite = menu === '즐겨찾기' ? true : false;
-
-    const nextList = list.filter( ({ nameKr, productName}) => {
+    const nextList = tempList.filter( ({ nameKr, productName, preferred }) => {
       const lowerName = productName.toLowerCase();
       let check = true;
 
@@ -268,18 +175,12 @@ function ProductTable({ list = [], productRequest = () => {} }: ProductTable) {
         && lowerName.search(lowerText) === -1
       ) check = false;
 
-      if(favorite) {
-        
-      }
-
+      if(favorite && preferred === 0) check = false;
+      
       return check;
     });
     setFilterList(nextList);
-  }, [list, searchText, menu]);
-
-  useEffect( () => {
-    // setFilterList();
-  }, [searchText, setFilterList]);
+  }, [tempList, searchText, menu]);
 
   useEffect( () => {
     const topMenu = document.getElementById('top_menu');
@@ -298,6 +199,121 @@ function ProductTable({ list = [], productRequest = () => {} }: ProductTable) {
     />
   , [chartData, handleDateClick]);
 
+  const tableColumnDefs: ColumnDefs<ProductList>[] = useMemo( () => ([
+    {
+      id: 'productName',
+      name: '상품명',
+      width: '20%',
+      align: 'left',
+      parser: ({ nameKr, productName, imgUrl, preferred, productCode }) => {
+        return (
+          <FlexContainer alignItems='center'>
+            <FlexItems flex='10'>
+              <FavoriteImg
+                className='product-favorite'
+                fill={ColorList.yellow01}
+                opacity={!preferred ? '0.3' : '1'}
+                data-active={preferred}
+                width='15px'
+                height='15px'
+                onClick={e => {
+                  const target = e.currentTarget;
+                  const isActive = target.getAttribute('data-active');
+                  target.setAttribute('opacity',`${isActive === '1' ? '0.3' : '1'}`);
+
+                  const setFavorite = tempList.map( item => {
+                    if(item.productCode !== productCode) return item;
+                    return {
+                      ...item,
+                      preferred: isActive === '1' ? 0 : 1
+                    };
+                  });
+
+                  console.log(setFavorite);
+                  
+                  setTempList(setFavorite);
+
+                  e.stopPropagation();
+                }}
+              />
+            </FlexItems>
+            <FlexItems flex='20'>
+              <Div as='img' width='40px' src={imgUrl} />
+            </FlexItems>
+            <FlexItems flex='70'>
+              <Text>{nameKr}</Text>
+              <Text weight='normal'>{productName}</Text>
+            </FlexItems>
+          </FlexContainer>
+        );
+      },
+    },
+    {
+      id: 'tradePrice',
+      name: '가격',
+      width: '20%',
+      align: 'right',
+      parser: ({ tradePrice }) => `${comma(tradePrice)}`,
+    },
+    {
+      id: 'growthRate',
+      name: '전일대비',
+      width: '20%',
+      align: 'right',
+      parser: ({ growthRate }) => {
+        const rate = +growthRate.toFixed(2);
+        const textColor = rate < 0 ? ColorList.blue01 : ColorList.red01;
+        return (
+          <Text color={textColor}>{rate < 0 ? rate : `+${rate}`}%</Text>
+        );
+      },
+    },
+    {
+      id: 'tradeFunds24H',
+      name: '거래대금',
+      width: '20%',
+      align: 'right',
+      parser: ({ tradeFunds24H }) => `${comma(tradeFunds24H.split('.')[0])}원`,
+    },
+    {
+      id: 'priceGraph',
+      name: '30일 동향',
+      width: '20%',
+      align: 'right',
+      parser: ({ price30D }: ProductList) => {
+        const data = (canvas: HTMLCanvasElement) => {
+          const ctx = canvas.getContext('2d');
+          const gradient = ctx?.createLinearGradient(0,0,canvas.width-100,0);
+          
+          gradient?.addColorStop(0, ColorList.yellow01);
+          gradient?.addColorStop(1, ColorList.yellow02);
+        
+          return {
+            labels: price30D.map(({ date }: ProductOhlc) => date),
+            datasets: [
+              {
+                fill: false,
+                lineTension: 0.1,
+                borderColor: gradient,
+                pointRadius: 0,
+                data: price30D.map(({ close }: ProductOhlc) => close),
+              }
+            ]
+          };
+        };
+  
+        return (
+          <Div height='70px'>
+            <Line
+              data={data}
+              options={CHART_OPTIONS}
+            />
+          </Div>
+        );
+      }
+    }
+  ]), [tempList, setTempList]);
+
   return(
     <Div>
       <TopMenu id='top_menu'>
@@ -314,7 +330,7 @@ function ProductTable({ list = [], productRequest = () => {} }: ProductTable) {
       </TopMenu>
       <BasicTable
         tableId='table'
-        columnDefs={TABLE_COLUMN_DEFS}
+        columnDefs={tableColumnDefs}
         rowData={filterList}
         uniqueKey={UNIQUE_KEY}
         selectMode
