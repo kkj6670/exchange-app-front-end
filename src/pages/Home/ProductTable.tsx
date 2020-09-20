@@ -199,6 +199,25 @@ function ProductTable({ list = [], productRequest = () => {} }: ProductTable) {
     />
   , [chartData, handleDateClick]);
 
+  const handleFavoriteClick = (e: React.MouseEvent, productCode: string) => {
+    const target = e.currentTarget;
+    const isActive = target.getAttribute('data-active');
+    target.setAttribute('opacity',`${isActive === '1' ? '0.3' : '1'}`);
+    
+    const setFavorite = tempList.map( item => {
+      if(item.productCode !== productCode) return item;
+      return {
+        ...item,
+        preferred: isActive === '1' ? 0 : 1
+      };
+    });
+
+    console.log(setFavorite);
+    
+    setTempList(setFavorite);
+
+    e.stopPropagation();
+  }
   const tableColumnDefs: ColumnDefs<ProductList>[] = useMemo( () => ([
     {
       id: 'productName',
@@ -216,25 +235,7 @@ function ProductTable({ list = [], productRequest = () => {} }: ProductTable) {
                 data-active={preferred}
                 width='15px'
                 height='15px'
-                onClick={e => {
-                  const target = e.currentTarget;
-                  const isActive = target.getAttribute('data-active');
-                  target.setAttribute('opacity',`${isActive === '1' ? '0.3' : '1'}`);
-
-                  const setFavorite = tempList.map( item => {
-                    if(item.productCode !== productCode) return item;
-                    return {
-                      ...item,
-                      preferred: isActive === '1' ? 0 : 1
-                    };
-                  });
-
-                  console.log(setFavorite);
-                  
-                  setTempList(setFavorite);
-
-                  e.stopPropagation();
-                }}
+                onClick={e => handleFavoriteClick(e, productCode)}
               />
             </FlexItems>
             <FlexItems flex='20'>
