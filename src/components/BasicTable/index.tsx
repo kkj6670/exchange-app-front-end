@@ -124,10 +124,10 @@ function BasicTable<T>({ tableId, columnDefs, rowData, uniqueKey, onRowClick, se
 
   return (
     <TableWrap id={tableId}>
-      <THead id={tableId+'_head'}>
+      <THead id={`${tableId}_head`}>
         {THeadList}
       </THead>
-      <TBody id={tableId+'_body'}>
+      <TBody id={`${tableId}_body`}>
         {TBodyList}
       </TBody>
     </TableWrap>
