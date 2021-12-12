@@ -5,9 +5,9 @@ import { ProductService } from './product.service';
 export class ProductController {
   constructor(private productService: ProductService) {}
 
-  @Get('all')
-  getAllProducts(): object[] {
-    return this.productService.getAllProducts();
+  @Get('main')
+  getMainProducts() {
+    return this.productService.getMainProducts();
   }
 
   @Get('tick')
