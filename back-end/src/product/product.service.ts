@@ -34,6 +34,19 @@ export class ProductService {
     return this.productRepository.find();
   }
 
+  async createProduct(createProductDto: CreateProductDto) {
+    const { code, nameEn, nameKr } = createProductDto;
+
+    const product = this.productRepository.create({
+      code,
+      nameEn,
+      nameKr,
+    });
+
+    await this.productRepository.save(product);
+    return product;
+  }
+
   async getProductById(id: number) {
     const found = await this.productRepository.findOne({ id });
 

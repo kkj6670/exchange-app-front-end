@@ -16,10 +16,16 @@ import { ProductService } from './product.service';
 export class ProductController {
   constructor(private productService: ProductService) {}
 
-  // @Get('/all')
-  // getAllProduct(): IProduct[] {
-  //   return this.productService.getAllProduct();
-  // }
+  @Get('/all')
+  getAllProduct() {
+    return this.productService.getAllProduct();
+  }
+
+  @Post('/create')
+  @UsePipes(ValidationPipe)
+  createProduct(@Body() createProduct: CreateProductDto) {
+    return this.productService.createProduct(createProduct);
+  }
 
   // @Get('/:id')
   // getProduct(@Param('id') id: string): IProduct {

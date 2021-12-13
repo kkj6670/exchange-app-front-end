@@ -6,29 +6,11 @@ export class Product extends BaseEntity {
   id: number;
 
   @Column()
+  code: string;
+
+  @Column()
   nameKr: string;
 
   @Column()
   nameEn: string;
-}
-
-@Entity()
-export class Candle extends BaseEntity {
-  @Column()
-  hight: number;
-
-  @Column()
-  volume: number;
-
-  @Column()
-  low: number;
-
-  @Column()
-  date: number;
-
-  @Column()
-  close: number;
-
-  @Column()
-  open: number;
 }
