@@ -1,6 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { map } from 'rxjs';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { v1 as uuid } from 'uuid';
+import { CreateProductDto, UpdateProductDto } from './dto/create-product.dto';
+import { ProductUpdateValidationPipe } from './pipes/ProductUpdateValidationPipe';
+import { ProductRepository } from './product.repository';
 
 // "nameKr": "이더리움",
 // "productCode": "ETHKRW",
@@ -22,70 +25,82 @@ import { map } from 'rxjs';
 
 @Injectable()
 export class ProductService {
-  constructor(private httpService: HttpService) {}
+  constructor(
+    @InjectRepository(ProductRepository)
+    private productRepository: ProductRepository,
+  ) {}
 
-  getProducts() {
-    const products = this.httpService
-      .get('https://api.upbit.com/v1/market/all?isDetails=false', {
-        headers: { Accept: 'application/json' },
-      })
-      .pipe(
-        map((res) => {
-          return res.data.filter((item) => item.market.includes('KRW-'));
-        }),
-      );
-
-    return products;
+  getAllProduct() {
+    return this.productRepository.find();
   }
 
-  getCandles(market = '', count = 1) {
-    const candle = this.httpService
-      .get(
-        `https://api.upbit.com/v1/candles/days?market=${market}&count=${count}`,
-        {
-          headers: { Accept: 'application/json' },
-        },
-      )
-      .pipe(
-        map((res) => {
-          return res.data;
-        }),
-      );
+  async getProductById(id: number) {
+    const found = await this.productRepository.findOne({ id });
 
-    return candle;
+    if (!found) {
+      throw new NotFoundException(`Product Not Found - id: ${id}`);
+    }
+
+    return found;
   }
 
-  getTicker(markets = []) {
-    const ticker = this.httpService
-      .get(`https://api.upbit.com/v1/ticker?markets=${markets.join(',')}`, {
-        headers: { Accept: 'application/json' },
-      })
-      .pipe(
-        map((res) => {
-          return res.data;
-        }),
-      );
+  // getAllProduct(): IProduct[] {
+  //   return this.products;
+  // }
 
-    return ticker;
-  }
+  // getProductById(id: string): IProduct {
+  //   const found = this.products.find((product) => product.id === id);
 
-  getMainProducts() {
-    const products = this.getProducts();
+  //   if (!found) {
+  //     throw new NotFoundException(`Product Not Found - ID: ${id}`);
+  //   }
 
-    products
-      .pipe(
-        map((list) => {
-          const nextList = [...list];
-          nextList.forEach((item) => {
-            const candles = this.getCandles(item.market, 30);
-            candles.forEach((a) => {
-              console.log(a);
-            });
-          });
+  //   return found;
+  // }
 
-          return nextList;
-        }),
-      )
-      .forEach((a) => console.log(a));
-  }
+  // createProduct(createProductDto: CreateProductDto) {
+  //   const { code, nameKr, nameEn } = createProductDto;
+  //   const product = {
+  //     id: uuid(),
+  //     code,
+  //     nameKr,
+  //     nameEn,
+  //   };
+
+  //   this.products.push(product);
+  //   return product;
+  // }
+
+  // deleteProduct(id: string): void {
+  //   let found = false;
+  //   const filterList = this.products.filter((product) => {
+  //     const check = product.id === id;
+  //     if (check) found = true;
+  //     return check;
+  //   });
+
+  //   if (!found) {
+  //     throw new NotFoundException(`Product Not Found - ID: ${id}`);
+  //   }
+
+  //   this.products = filterList;
+  // }
+
+  // updateProduct(updateProductDto: UpdateProductDto): void {
+  //   console.log(updateProductDto);
+  //   const { id, code, nameKr, nameEn } = updateProductDto;
+  //   const found = this.products.find((product) => product.id === id) || {
+  //     code: '',
+  //     nameKr: '',
+  //     nameEn: '',
+  //   };
+
+  //   if (!found) {
+  //     throw new NotFoundException(`Product Not Found - ID: ${id}`);
+  //   }
+
+  //   found.code = code;
+  //   found.nameKr = nameKr;
+  //   found.nameEn = nameEn;
+  // }
 }

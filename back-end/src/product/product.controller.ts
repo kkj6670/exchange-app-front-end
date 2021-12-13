@@ -1,17 +1,47 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { CreateProductDto, UpdateProductDto } from './dto/create-product.dto';
+import { ProductUpdateValidationPipe } from './pipes/ProductUpdateValidationPipe';
 import { ProductService } from './product.service';
 
 @Controller('product')
 export class ProductController {
   constructor(private productService: ProductService) {}
 
-  @Get('main')
-  getMainProducts() {
-    return this.productService.getMainProducts();
-  }
+  // @Get('/all')
+  // getAllProduct(): IProduct[] {
+  //   return this.productService.getAllProduct();
+  // }
 
-  @Get('tick')
-  productTick(): object[] {
-    return [{ a: 1 }];
-  }
+  // @Get('/:id')
+  // getProduct(@Param('id') id: string): IProduct {
+  //   return this.productService.getProductById(id);
+  // }
+
+  // @Post('create')
+  // @UsePipes(ValidationPipe)
+  // createProduct(@Body() createProductDto: CreateProductDto): IProduct {
+  //   return this.productService.createProduct(createProductDto);
+  // }
+
+  // @Post('update')
+  // @UsePipes(ValidationPipe)
+  // updateProduct(
+  //   @Body(ProductUpdateValidationPipe) updateProductDto: UpdateProductDto,
+  // ): void {
+  //   return this.productService.updateProduct(updateProductDto);
+  // }
+
+  // @Delete('/:id')
+  // deleteProduct(@Param('id') id: string): void {
+  //   this.productService.deleteProduct(id);
+  // }
 }
