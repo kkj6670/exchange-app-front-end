@@ -1,16 +1,19 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export class Product extends BaseEntity {
+export class Trade extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
   @PrimaryColumn()
   code: string;
 
-  @Column()
-  nameKr: string;
+  @Column({ type: 'timestamptz' })
+  timestamp: Date;
 
   @Column()
-  nameEn: string;
+  trade_price: number;
+
+  @Column()
+  trade_volume: number;
 }

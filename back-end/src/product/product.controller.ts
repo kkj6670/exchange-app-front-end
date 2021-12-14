@@ -9,45 +9,37 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateProductDto, UpdateProductDto } from './dto/create-product.dto';
-import { ProductUpdateValidationPipe } from './pipes/ProductUpdateValidationPipe';
+import { ProductValidationPipe } from './pipes/ProductValidationPipe';
 import { ProductService } from './product.service';
 
 @Controller('product')
 export class ProductController {
   constructor(private productService: ProductService) {}
 
+  @Get('/main')
+  getMainProductList(): void {
+    this.productService.getMainProductList();
+  }
+
   @Get('/all')
   getAllProduct() {
     return this.productService.getAllProduct();
   }
 
+  @Get('/:id')
+  getProduct(@Param('id') id: number) {
+    return this.productService.getProductById(id);
+  }
+
   @Post('/create')
   @UsePipes(ValidationPipe)
-  createProduct(@Body() createProduct: CreateProductDto) {
+  createProduct(@Body(ProductValidationPipe) createProduct: CreateProductDto) {
     return this.productService.createProduct(createProduct);
   }
 
-  // @Get('/:id')
-  // getProduct(@Param('id') id: string): IProduct {
-  //   return this.productService.getProductById(id);
-  // }
-
-  // @Post('create')
-  // @UsePipes(ValidationPipe)
-  // createProduct(@Body() createProductDto: CreateProductDto): IProduct {
-  //   return this.productService.createProduct(createProductDto);
-  // }
-
-  // @Post('update')
-  // @UsePipes(ValidationPipe)
-  // updateProduct(
-  //   @Body(ProductUpdateValidationPipe) updateProductDto: UpdateProductDto,
-  // ): void {
-  //   return this.productService.updateProduct(updateProductDto);
-  // }
-
-  // @Delete('/:id')
-  // deleteProduct(@Param('id') id: string): void {
-  //   this.productService.deleteProduct(id);
-  // }
+  @Post('/creates')
+  @UsePipes(ValidationPipe)
+  createProducts(@Body(ProductValidationPipe) createProduct: CreateProductDto[]) {
+    return this.productService.createProducts(createProduct);
+  }
 }

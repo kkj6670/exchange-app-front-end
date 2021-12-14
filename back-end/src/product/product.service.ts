@@ -1,50 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { v1 as uuid } from 'uuid';
+import { TradeService } from 'src/trade/trade.service';
 import { CreateProductDto, UpdateProductDto } from './dto/create-product.dto';
-import { ProductUpdateValidationPipe } from './pipes/ProductUpdateValidationPipe';
 import { ProductRepository } from './product.repository';
-
-// "nameKr": "이더리움",
-// "productCode": "ETHKRW",
-// "productName": "ETH/KRW",
-// "tradePrice": 413600,
-// "tradeFunds24H": "220084590.71",
-// "growthRate": 5.537126818065833,
-// "imgUrl": "/exchange-app/img/ETH.png",
-// "preferred": 0,
-// "price30D": [
-//   {
-//     "high": 277500,
-//     "volume": 558.9815999999996,
-//     "low": 267700,
-//     "date": 1593561600,
-//     "close": 276500,
-//     "open": 269700
-//   },
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(ProductRepository)
     private productRepository: ProductRepository,
+    private tradeService: TradeService,
   ) {}
 
   getAllProduct() {
     return this.productRepository.find();
-  }
-
-  async createProduct(createProductDto: CreateProductDto) {
-    const { code, nameEn, nameKr } = createProductDto;
-
-    const product = this.productRepository.create({
-      code,
-      nameEn,
-      nameKr,
-    });
-
-    await this.productRepository.save(product);
-    return product;
   }
 
   async getProductById(id: number) {
@@ -57,63 +26,58 @@ export class ProductService {
     return found;
   }
 
-  // getAllProduct(): IProduct[] {
-  //   return this.products;
-  // }
+  async createProduct(createProductDto: CreateProductDto) {
+    const { code, nameEn, nameKr } = createProductDto;
 
-  // getProductById(id: string): IProduct {
-  //   const found = this.products.find((product) => product.id === id);
+    const product = this.productRepository.create({
+      code,
+      nameEn,
+      nameKr,
+    });
 
-  //   if (!found) {
-  //     throw new NotFoundException(`Product Not Found - ID: ${id}`);
-  //   }
+    console.log(product);
 
-  //   return found;
-  // }
+    await this.productRepository.save(product);
+    return product;
+  }
 
-  // createProduct(createProductDto: CreateProductDto) {
-  //   const { code, nameKr, nameEn } = createProductDto;
-  //   const product = {
-  //     id: uuid(),
-  //     code,
-  //     nameKr,
-  //     nameEn,
-  //   };
+  async createProducts(createProductDto: CreateProductDto[]) {
+    const products = this.productRepository.create(createProductDto);
 
-  //   this.products.push(product);
-  //   return product;
-  // }
+    await this.productRepository.save(products);
+    return products;
+  }
 
-  // deleteProduct(id: string): void {
-  //   let found = false;
-  //   const filterList = this.products.filter((product) => {
-  //     const check = product.id === id;
-  //     if (check) found = true;
-  //     return check;
-  //   });
+  deleteProduct(id: number): void {
+    // const found = this.productRepository.getId();
+  }
+  /*
+  "nameKr": "이더리움",
+  "productCode": "ETHKRW",
+  "productName": "ETH/KRW",
+  "tradePrice": 413600,
+  "tradeFunds24H": "220084590.71",
+  "growthRate": 5.537126818065833,
+  "imgUrl": "/exchange-app/img/ETH.png",
+  "preferred": 0,
+  "price30D": [
+    {
+      "high": 277500,
+      "volume": 558.9815999999996,
+      "low": 267700,
+      "date": 1593561600,
+      "close": 276500,
+      "open": 269700
+    }
+  ]
+*/
+  async getMainProductList() {
+    const allProduct = await this.getAllProduct();
 
-  //   if (!found) {
-  //     throw new NotFoundException(`Product Not Found - ID: ${id}`);
-  //   }
+    const test = await this.tradeService.getCurrentPrice(allProduct.map((product) => product.code));
 
-  //   this.products = filterList;
-  // }
+    console.log(test);
 
-  // updateProduct(updateProductDto: UpdateProductDto): void {
-  //   console.log(updateProductDto);
-  //   const { id, code, nameKr, nameEn } = updateProductDto;
-  //   const found = this.products.find((product) => product.id === id) || {
-  //     code: '',
-  //     nameKr: '',
-  //     nameEn: '',
-  //   };
-
-  //   if (!found) {
-  //     throw new NotFoundException(`Product Not Found - ID: ${id}`);
-  //   }
-
-  //   found.code = code;
-  //   found.nameKr = nameKr;
-  //   found.nameEn = nameEn;
-  // }
+    // return 123;
+  }
 }
