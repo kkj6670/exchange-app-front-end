@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { TradeRepository } from 'src/trade/trade.repository';
 import { TradeService } from 'src/trade/trade.service';
 import { CreateProductDto, UpdateProductDto } from './dto/create-product.dto';
 import { ProductRepository } from './product.repository';
@@ -9,7 +10,8 @@ export class ProductService {
   constructor(
     @InjectRepository(ProductRepository)
     private productRepository: ProductRepository,
-    private tradeService: TradeService,
+    @InjectRepository(TradeRepository)
+    private tradeRepository: TradeRepository,
   ) {}
 
   getAllProduct() {
@@ -74,7 +76,7 @@ export class ProductService {
   async getMainProductList() {
     const allProduct = await this.getAllProduct();
 
-    const test = await this.tradeService.getCurrentPrice(allProduct.map((product) => product.code));
+    const test = await this.tradeRepository.lastPriceList();
 
     console.log(test);
 

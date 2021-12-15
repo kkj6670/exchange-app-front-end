@@ -34,13 +34,4 @@ export class TradeService {
 
     return trade;
   }
-
-  async getCurrentPrice(codes: string[]) {
-    const priceList = await this.tradeRepository.find({
-      where: { code: codes },
-      order: { timestamp: 'ASC' },
-    });
-
-    return priceList;
-  }
 }
