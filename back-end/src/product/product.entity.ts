@@ -6,11 +6,11 @@ export class Product extends BaseEntity {
   id: number;
 
   @PrimaryColumn()
-  code: string;
+  market: string;
 
   @Column()
-  nameKr: string;
+  korean_name: string;
 
   @Column()
-  nameEn: string;
+  english_name: string;
 }

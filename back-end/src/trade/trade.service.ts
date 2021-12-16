@@ -11,12 +11,9 @@ export class TradeService {
   ) {}
 
   async createTrade(createTrade: CreateTradeDto) {
-    const { code, timestamp, trade_price, trade_volume } = createTrade;
     const trade = this.tradeRepository.create({
-      code,
-      timestamp,
-      trade_price,
-      trade_volume,
+      ...createTrade,
+      timestamp: new Date(createTrade.timestamp),
     });
 
     this.tradeRepository.save(trade);
@@ -25,13 +22,15 @@ export class TradeService {
   }
 
   async createTrades(createTrades: CreateTradeDto[]) {
-    createTrades.forEach((item) => {
-      item.timestamp = new Date(item.timestamp);
-    });
-    const trade = this.tradeRepository.create(createTrades);
+    const filterCreateTrades = createTrades.map((item) => ({
+      ...item,
+      timestamp: new Date(item.timestamp),
+    }));
 
-    this.tradeRepository.save(trade);
+    const trades = this.tradeRepository.create(filterCreateTrades);
 
-    return trade;
+    this.tradeRepository.save(trades);
+
+    return trades;
   }
 }

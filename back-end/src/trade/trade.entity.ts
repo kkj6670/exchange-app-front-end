@@ -1,12 +1,19 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, PrimaryColumn } from 'typeorm';
+import {
+  Entity,
+  BaseEntity,
+  PrimaryGeneratedColumn,
+  Column,
+  PrimaryColumn,
+  AfterLoad,
+} from 'typeorm';
 
 @Entity()
 export class Trade extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
-  @PrimaryColumn()
-  code: string;
+  @Column()
+  market: string;
 
   @Column({ type: 'timestamptz' })
   timestamp: Date;
@@ -16,4 +23,12 @@ export class Trade extends BaseEntity {
 
   @Column()
   trade_volume: number;
+
+  @Column({ select: true, nullable: false, insert: false, update: false })
+  trade_price_volume: number;
+
+  @AfterLoad()
+  getTradePriceVolume() {
+    this.trade_price_volume = this.trade_price * this.trade_volume;
+  }
 }

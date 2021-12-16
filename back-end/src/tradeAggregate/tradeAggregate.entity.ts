@@ -5,8 +5,8 @@ export class TradeAggregate extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
-  @PrimaryColumn()
-  code: string;
+  @Column()
+  market: string;
 
   @Column({ type: 'timestamptz' })
   timestamp: Date;
@@ -15,5 +15,8 @@ export class TradeAggregate extends BaseEntity {
   trade_price: number;
 
   @Column()
-  trade_volume: number;
+  candle_acc_trade_price: number;
+
+  @Column()
+  candle_acc_trade_volume: number;
 }

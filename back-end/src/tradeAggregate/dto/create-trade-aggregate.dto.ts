@@ -2,23 +2,17 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateTradeAggregateDto {
   @IsNotEmpty()
-  code: string;
+  market: string;
 
   @IsNotEmpty()
   timestamp: Date;
 
   @IsNotEmpty()
-  high: number;
+  trade_price: number;
 
   @IsNotEmpty()
-  low: number;
+  candle_acc_trade_price: number;
 
   @IsNotEmpty()
-  open: number;
-
-  @IsNotEmpty()
-  close: number;
-
-  @IsNotEmpty()
-  price: number;
+  candle_acc_trade_volume: number;
 }

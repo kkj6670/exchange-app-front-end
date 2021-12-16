@@ -11,16 +11,16 @@ import {
 import { CreateTradeDto } from './dto/create-trade.dto';
 import { TradeService } from './trade.service';
 
-@Controller('Trade')
+@Controller('trade')
 export class TradeController {
   constructor(private tradeService: TradeService) {}
 
-  @Post('create')
+  @Post('/create')
   createTrade(@Body() createTrade: CreateTradeDto) {
     return this.tradeService.createTrade(createTrade);
   }
 
-  @Post('creates')
+  @Post('/creates')
   createTrades(@Body() createTrades: CreateTradeDto[]) {
     return this.tradeService.createTrades(createTrades);
   }

@@ -2,13 +2,13 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateProductDto {
   @IsNotEmpty()
-  code: string;
+  market: string;
 
   @IsNotEmpty()
-  nameKr: string;
+  korean_name: string;
 
   @IsNotEmpty()
-  nameEn: string;
+  english_name: string;
 }
 
 export class UpdateProductDto extends CreateProductDto {

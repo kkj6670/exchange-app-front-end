@@ -8,10 +8,20 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import {} from './dto/create-trade-aggregate.dto';
+import { CreateTradeAggregateDto } from './dto/create-trade-aggregate.dto';
 import { TradeAggregateService } from './tradeAggregate.service';
 
-@Controller('Trade')
+@Controller('TradeAggregate')
 export class TradeAggregateController {
   constructor(private tradeAggregateService: TradeAggregateService) {}
+
+  @Post()
+  createsAggregate(@Body() createAggregate: CreateTradeAggregateDto) {
+    return this.tradeAggregateService.createsAggregate(createAggregate);
+  }
+
+  @Post()
+  createsAggregates(@Body() createAggregates: CreateTradeAggregateDto[]) {
+    return this.tradeAggregateService.createsAggregates(createAggregates);
+  }
 }

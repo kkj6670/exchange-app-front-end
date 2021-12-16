@@ -2,7 +2,7 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateTradeDto {
   @IsNotEmpty()
-  code: string;
+  market: string;
 
   @IsNotEmpty()
   timestamp: Date;

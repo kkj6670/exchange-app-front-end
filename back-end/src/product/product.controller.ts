@@ -15,12 +15,6 @@ import { ProductService } from './product.service';
 @Controller('product')
 export class ProductController {
   constructor(private productService: ProductService) {}
-
-  @Get('/main')
-  getMainProductList(): void {
-    this.productService.getMainProductList();
-  }
-
   @Get('/all')
   getAllProduct() {
     return this.productService.getAllProduct();
@@ -41,5 +35,10 @@ export class ProductController {
   @UsePipes(ValidationPipe)
   createProducts(@Body(ProductValidationPipe) createProduct: CreateProductDto[]) {
     return this.productService.createProducts(createProduct);
+  }
+
+  @Post('/creates')
+  deleteProduct(@Body() id: number) {
+    return this.productService.deleteProduct(id);
   }
 }
