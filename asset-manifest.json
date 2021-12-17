@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.js": "/kkj6670/exchange-app-front-end/static/js/main.df337f82.chunk.js",
+    "main.js.map": "/kkj6670/exchange-app-front-end/static/js/main.df337f82.chunk.js.map",
+    "runtime-main.js": "/kkj6670/exchange-app-front-end/static/js/runtime-main.0bfd7a96.js",
+    "runtime-main.js.map": "/kkj6670/exchange-app-front-end/static/js/runtime-main.0bfd7a96.js.map",
+    "static/js/2.947ebe3c.chunk.js": "/kkj6670/exchange-app-front-end/static/js/2.947ebe3c.chunk.js",
+    "static/js/2.947ebe3c.chunk.js.map": "/kkj6670/exchange-app-front-end/static/js/2.947ebe3c.chunk.js.map",
+    "index.html": "/kkj6670/exchange-app-front-end/index.html",
+    "precache-manifest.56befdb4427ce23ae81882353f6a3e0a.js": "/kkj6670/exchange-app-front-end/precache-manifest.56befdb4427ce23ae81882353f6a3e0a.js",
+    "service-worker.js": "/kkj6670/exchange-app-front-end/service-worker.js",
+    "static/js/2.947ebe3c.chunk.js.LICENSE.txt": "/kkj6670/exchange-app-front-end/static/js/2.947ebe3c.chunk.js.LICENSE.txt",
+    "static/media/apex_fulltext_logo.5f6ca100.svg": "/kkj6670/exchange-app-front-end/static/media/apex_fulltext_logo.5f6ca100.svg",
+    "static/media/icon_favorite.7af98a39.svg": "/kkj6670/exchange-app-front-end/static/media/icon_favorite.7af98a39.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.0bfd7a96.js",
+    "static/js/2.947ebe3c.chunk.js",
+    "static/js/main.df337f82.chunk.js"
+  ]
+}
