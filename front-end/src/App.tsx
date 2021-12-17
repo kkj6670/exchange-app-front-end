@@ -16,14 +16,13 @@ import { RootState } from 'store/reducer';
 
 const setTheme = (theme: string) => {
   let themeObj = DarkTheme;
-  if(theme === 'drak') themeObj = DarkTheme;
-  if(theme === 'white') themeObj = WhiteTheme;
+  if (theme === 'drak') themeObj = DarkTheme;
+  if (theme === 'white') themeObj = WhiteTheme;
   return themeObj;
 };
 
 function App() {
-  const theme = useSelector( (state: RootState) => state.base.theme || '' );
-  console.log(process.env.PUBLIC_URL);
+  const theme = useSelector((state: RootState) => state.base.theme || '');
   return (
     <ThemeProvider theme={setTheme(theme)}>
       <GlobalStyle />
