@@ -43,7 +43,7 @@ export class DashboardService {
         const tradeFunds24H: number = +funds24HObj[product.market].toFixed(2);
         const price30D = price30DObj[product.market];
         const change_rate: number = +(
-          ((trade_price - price30D[0].trade_price) / trade_price) *
+          ((trade_price - price30D[price30D.length - 1].trade_price) / trade_price) *
           100
         ).toFixed(2);
 

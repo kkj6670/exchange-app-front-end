@@ -24,6 +24,9 @@ export class TradeAggregateService {
       where: {
         timestamp: MoreThan(targetDate),
       },
+      order: {
+        timestamp: 'ASC',
+      },
     });
   }
 
