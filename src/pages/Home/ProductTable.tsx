@@ -241,7 +241,7 @@ function ProductTable({ list, productRequest = () => {} }: ProductTable) {
         name: '상품명',
         width: '20%',
         align: 'left',
-        parser: ({ korean_name, market }) => {
+        parser: ({ korean_name, market, english_name }) => {
           const favoriteList = JSON.parse(localStorage.getItem('favoriteList') || '[]') || [];
           const isFavorite = favoriteList.includes(market);
 
@@ -259,10 +259,14 @@ function ProductTable({ list, productRequest = () => {} }: ProductTable) {
                 />
               </FlexItems>
               <FlexItems flex='20'>
-                <Div as='img' width='40px' src={''} />
+                <Div
+                  as='img'
+                  width='30px'
+                  src={`https://static.upbit.com/logos/${market?.replace('KRW-', '')}.png`}
+                />
               </FlexItems>
               <FlexItems flex='70'>
-                <Text>{korean_name}</Text>
+                <Text>{`${korean_name}(${english_name})`}</Text>
                 <Text weight='normal'>{market}</Text>
               </FlexItems>
             </FlexContainer>
