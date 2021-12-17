@@ -1,5 +1,6 @@
 {
-  "homepage": "https://kkj6670.github.io/exchange-app",
+  "repository": "https://github.com/kkj6670/exchange-app-front-end/",
+  "homepage": "https://github.com/kkj6670/exchange-app-front-end/",
   "name": "exchange-app",
   "version": "0.0.1",
   "private": true,

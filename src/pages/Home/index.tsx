@@ -24,11 +24,11 @@ function Home() {
   const visualData = useMemo(
     () => [
       {
-        src: '/exchange-app/img/visual_01.jpg',
+        src: `${process.env.PUBLIC_URL}/img/visual_01.jpg`,
         name: 'visual_01',
       },
       {
-        src: '/exchange-app/img/visual_02.png',
+        src: `${process.env.PUBLIC_URL}/img/visual_02.png`,
         name: 'visual_02',
       },
     ],
